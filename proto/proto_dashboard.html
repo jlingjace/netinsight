@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NetInsight - 分析仪表盘</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        body {
+            background-color: #f0f2f5;
+            color: #262626;
+        }
+        .header {
+            background-color: white;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            padding: 0 24px;
+            height: 64px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .logo {
+            font-size: 20px;
+            font-weight: bold;
+            color: #1890ff;
+            display: flex;
+            align-items: center;
+        }
+        .logo img {
+            margin-right: 10px;
+        }
+        .user-menu {
+            display: flex;
+            align-items: center;
+        }
+        .user-menu .avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background-color: #1890ff;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 8px;
+        }
+        .main-container {
+            display: flex;
+            height: calc(100vh - 64px);
+        }
+        .sidebar {
+            width: 200px;
+            background-color: white;
+            padding: 24px 0;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+        .menu-item {
+            padding: 12px 24px;
+            display: flex;
+            align-items: center;
+            color: #262626;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+        .menu-item.active {
+            background-color: #e6f7ff;
+            color: #1890ff;
+            border-right: 3px solid #1890ff;
+        }
+        .menu-item:hover {
+            background-color: #f0f2f5;
+        }
+        .menu-item i {
+            margin-right: 10px;
+        }
+        .content {
+            flex: 1;
+            padding: 24px;
+            overflow-y: auto;
+        }
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+        .page-title {
+            font-size: 24px;
+            font-weight: 500;
+        }
+        .page-actions {
+            display: flex;
+        }
+        .action-button {
+            padding: 8px 16px;
+            background-color: white;
+            border: 1px solid #d9d9d9;
+            border-radius: 4px;
+            margin-left: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            font-size: 14px;
+        }
+        .action-button i {
+            margin-right: 6px;
+        }
+        .primary-button {
+            background-color: #1890ff;
+            color: white;
+            border: none;
+        }
+        .filters {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            padding: 16px;
+            margin-bottom: 24px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+        .filter-group {
+            flex: 1;
+            min-width: 200px;
+        }
+        .filter-label {
+            font-size: 14px;
+            margin-bottom: 8px;
+            color: #8c8c8c;
+        }
+        .filter-control {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #d9d9d9;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        .metrics-row {
+            display: flex;
+            gap: 24px;
+            margin-bottom: 24px;
+        }
+        .metric-card {
+            flex: 1;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            padding: 16px;
+        }
+        .metric-title {
+            font-size: 14px;
+            color: #8c8c8c;
+            margin-bottom: 8px;
+        }
+        .metric-value {
+            font-size: 24px;
+            font-weight: 500;
+            margin-bottom: 8px;
+        }
+        .metric-trend {
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+        }
+        .trend-up {
+            color: #52c41a;
+        }
+        .trend-down {
+            color: #f5222d;
+        }
+        .chart-row {
+            display: flex;
+            gap: 24px;
+            margin-bottom: 24px;
+        }
+        .chart-card {
+            flex: 1;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            padding: 16px;
+        }
+        .chart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+        .chart-title {
+            font-size: 16px;
+            font-weight: 500;
+        }
+        .chart-actions {
+            font-size: 14px;
+            color: #1890ff;
+            cursor: pointer;
+        }
+        .chart-container {
+            height: 300px;
+            background-color: #f9f9f9;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #8c8c8c;
+        }
+        .table-card {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            padding: 16px;
+            margin-bottom: 24px;
+        }
+        .table-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+        .table-title {
+            font-size: 16px;
+            font-weight: 500;
+        }
+        .table-actions {
+            font-size: 14px;
+            color: #1890ff;
+            cursor: pointer;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 12px 16px;
+            text-align: left;
+            border-bottom: 1px solid #f0f2f5;
+        }
+        th {
+            background-color: #fafafa;
+            font-weight: 500;
+            color: #262626;
+        }
+        tr:hover {
+            background-color: #fafafa;
+        }
+        .status-tag {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+        }
+        .status-normal {
+            background-color: #e6f7ff;
+            color: #1890ff;
+        }
+        .status-warning {
+            background-color: #fff7e6;
+            color: #faad14;
+        }
+        .status-error {
+            background-color: #fff1f0;
+            color: #f5222d;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="logo">
+            <img src="logo_placeholder.svg" alt="Logo" width="24" height="24">
+            NetInsight
+        </div>
+        <div class="user-menu">
+            <div class="avatar">U</div>
+            <span>用户名</span>
+        </div>
+    </div>
+    <div class="main-container">
+        <div class="sidebar">
+            <a href="#" class="menu-item">
+                <i>📤</i> 文件上传
+            </a>
+            <a href="#" class="menu-item active">
+                <i>📊</i> 分析报告
+            </a>
+            <a href="#" class="menu-item">
+                <i>🔍</i> 安全检测
+            </a>
+            <a href="#" class="menu-item">
+                <i>📈</i> 性能分析
+            </a>
+            <a href="#" class="menu-item">
+                <i>⚙️</i> 设置
+            </a>
+        </div>
+        <div class="content">
+            <div class="page-header">
+                <h1 class="page-title">网络流量分析报告</h1>
+                <div class="page-actions">
+                    <button class="action-button">
+                        <i>💾</i> 导出报告
+                    </button>
+                    <button class="action-button">
+                        <i>🔄</i> 刷新
+                    </button>
+                    <button class="action-button primary-button">
+                        <i>📋</i> 详细报告
+                    </button>
+                </div>
+            </div>
+            
+            <div class="filters">
+                <div class="filter-group">
+                    <div class="filter-label">时间范围</div>
+                    <select class="filter-control">
+                        <option>全部时间</option>
+                        <option>最近1小时</option>
+                        <option>最近24小时</option>
+                        <option>自定义...</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <div class="filter-label">协议</div>
+                    <select class="filter-control">
+                        <option>全部协议</option>
+                        <option>HTTP/HTTPS</option>
+                        <option>TCP</option>
+                        <option>UDP</option>
+                        <option>DNS</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <div class="filter-label">IP地址</div>
+                    <input type="text" class="filter-control" placeholder="输入IP地址">
+                </div>
+                <div class="filter-group">
+                    <div class="filter-label">分析视图</div>
+                    <select class="filter-control">
+                        <option>综合视图</option>
+                        <option>性能视图</option>
+                        <option>安全视图</option>
+                        <option>应用视图</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="metrics-row">
+                <div class="metric-card">
+                    <div class="metric-title">平均延迟</div>
+                    <div class="metric-value">120ms</div>
+                    <div class="metric-trend trend-down">
+                        <i>↓</i> 较基线降低 15%
+                    </div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-title">丢包率</div>
+                    <div class="metric-value">0.2%</div>
+                    <div class="metric-trend trend-up">
+                        <i>↑</i> 较基线增加 0.1%
+                    </div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-title">安全事件</div>
+                    <div class="metric-value">2</div>
+                    <div class="metric-trend trend-down">
+                        <i>↓</i> 较基线降低 50%
+                    </div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-title">总流量</div>
+                    <div class="metric-value">256MB</div>
+                    <div class="metric-trend">
+                        <i>→</i> 与基线持平
+                    </div>
+                </div>
+            </div>
+            
+            <div class="chart-row">
+                <div class="chart-card">
+                    <div class="chart-header">
+                        <div class="chart-title">流量分布</div>
+                        <div class="chart-actions">查看详情</div>
+                    </div>
+                    <div class="chart-container">
+                        [流量分布饼图]
+                    </div>
+                </div>
+                <div class="chart-card">
+                    <div class="chart-header">
+                        <div class="chart-title">时序流量</div>
+                        <div class="chart-actions">查看详情</div>
+                    </div>
+                    <div class="chart-container">
+                        [时序流量折线图]
+                    </div>
+                </div>
+            </div>
+            
+            <div class="chart-row">
+                <div class="chart-card">
+                    <div class="chart-header">
+                        <div class="chart-title">网络拓扑</div>
+                        <div class="chart-actions">查看详情</div>
+                    </div>
+                    <div class="chart-container">
+                        [网络拓扑图]
+                    </div>
+                </div>
+                <div class="chart-card">
+                    <div class="chart-header">
+                        <div class="chart-title">安全事件分布</div>
+                        <div class="chart-actions">查看详情</div>
+                    </div>
+                    <div class="chart-container">
+                        [安全事件热力图]
+                    </div>
+                </div>
+            </div>
+            
+            <div class="table-card">
+                <div class="table-header">
+                    <div class="table-title">HTTP请求分析</div>
+                    <div class="table-actions">查看全部</div>
+                </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>URL</th>
+                            <th>方法</th>
+                            <th>状态码</th>
+                            <th>响应时间</th>
+                            <th>大小</th>
+                            <th>状态</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>https://api.example.com/data</td>
+                            <td>POST</td>
+                            <td>200</td>
+                            <td>2.5s</td>
+                            <td>15KB</td>
+                            <td><span class="status-tag status-warning">慢响应</span></td>
+                        </tr>
+                        <tr>
+                            <td>https://cdn.example.com/image.jpg</td>
+                            <td>GET</td>
+                            <td>200</td>
+                            <td>120ms</td>
+                            <td>250KB</td>
+                            <td><span class="status-tag status-normal">正常</span></td>
+                        </tr>
+                        <tr>
+                            <td>https://api.example.com/users</td>
+                            <td>GET</td>
+                            <td>404</td>
+                            <td>85ms</td>
+                            <td>2KB</td>
+                            <td><span class="status-tag status-error">错误</span></td>
+                        </tr>
+                        <tr>
+                            <td>https://analytics.example.com/track</td>
+                            <td>POST</td>
+                            <td>200</td>
+                            <td>95ms</td>
+                            <td>1KB</td>
+                            <td><span class="status-tag status-normal">正常</span></td>
+                        </tr>
+                        <tr>
+                            <td>https://api.example.com/config</td>
+                            <td>GET</td>
+                            <td>200</td>
+                            <td>75ms</td>
+                            <td>5KB</td>
+                            <td><span class="status-tag status-normal">正常</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <div class="table-card">
+                <div class="table-header">
+                    <div class="table-title">安全事件</div>
+                    <div class="table-actions">查看全部</div>
+                </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>类型</th>
+                            <th>严重性</th>
+                            <th>源IP</th>
+                            <th>目标</th>
+                            <th>时间</th>
+                            <th>状态</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>端口扫描</td>
+                            <td>高</td>
+                            <td>192.168.1.100</td>
+                            <td>10.0.0.5</td>
+                            <td>14:15:20</td>
+                            <td><span class="status-tag status-error">未处理</span></td>
+                        </tr>
+                        <tr>
+                            <td>恶意DNS查询</td>
+                            <td>中</td>
+                            <td>192.168.1.105</td>
+                            <td>malware.example.com</td>
+                            <td>14:18:45</td>
+                            <td><span class="status-tag status-warning">待确认</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

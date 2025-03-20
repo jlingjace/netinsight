@@ -1,0 +1,51 @@
+.dashboard-container {
+  padding: 16px;
+}
+
+.welcome-section {
+  margin-bottom: 16px;
+}
+
+.loading-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 500px;
+}
+
+.action-card {
+  transition: all 0.3s;
+  height: 100%;
+}
+
+.action-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.action-content {
+  display: flex;
+  align-items: center;
+  padding: 8px;
+}
+
+.action-icon {
+  font-size: 32px;
+  color: #1890ff;
+  margin-right: 16px;
+}
+
+.action-text {
+  flex: 1;
+}
+
+.action-title {
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.action-description {
+  font-size: 14px;
+  color: #8c8c8c;
+} 

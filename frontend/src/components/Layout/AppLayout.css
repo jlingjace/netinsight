@@ -1,0 +1,68 @@
+.app-layout {
+  height: 100vh;
+}
+
+.app-sider {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.09);
+  z-index: 10;
+}
+
+.app-header {
+  padding: 0 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+  z-index: 5;
+}
+
+.app-content {
+  padding: 24px;
+  background-color: #f0f2f5;
+  height: calc(100vh - 64px);
+  overflow-y: auto;
+}
+
+.logo {
+  height: 64px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #1890ff;
+  font-size: 20px;
+  font-weight: bold;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.trigger-button {
+  font-size: 18px;
+  padding: 0 12px;
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+}
+
+.notification-button {
+  margin-right: 16px;
+  font-size: 18px;
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  padding: 4px 12px;
+  border-radius: 4px;
+  transition: all 0.3s;
+}
+
+.user-info:hover {
+  background-color: rgba(0, 0, 0, 0.03);
+}
+
+.username {
+  margin-left: 8px;
+  color: #262626;
+} 
