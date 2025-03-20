@@ -11,6 +11,7 @@ import {
   BellOutlined,
   SettingOutlined,
   LogoutOutlined,
+  QuestionCircleOutlined,
 } from '@ant-design/icons';
 import { useNavigate, useLocation, Outlet } from 'react-router-dom';
 import { authService } from '../../services/api';
@@ -27,6 +28,7 @@ const AppLayout: React.FC = () => {
   // 获取存储的用户信息
   const userStr = localStorage.getItem('user');
   const user = userStr ? JSON.parse(userStr) : null;
+  const isAdmin = user?.role === 'admin';
   
   const toggleCollapsed = () => {
     setCollapsed(!collapsed);
@@ -48,6 +50,7 @@ const AppLayout: React.FC = () => {
     if (path.startsWith('/upload')) return ['upload'];
     if (path.startsWith('/reports')) return ['reports'];
     if (path.startsWith('/profile')) return ['profile'];
+    if (path.startsWith('/settings')) return ['settings'];
     return ['dashboard'];
   };
   
@@ -61,13 +64,15 @@ const AppLayout: React.FC = () => {
     },
     {
       key: 'settings',
-      label: '设置',
+      label: '系统设置',
       icon: <SettingOutlined />,
       onClick: () => navigate('/settings'),
     },
     {
-      key: 'divider',
-      type: 'divider',
+      key: 'help',
+      label: '帮助中心',
+      icon: <QuestionCircleOutlined />,
+      onClick: () => navigate('/help'),
     },
     {
       key: 'logout',
@@ -113,6 +118,12 @@ const AppLayout: React.FC = () => {
               label: '分析报告',
               onClick: () => handleMenuClick('/reports'),
             },
+            {
+              key: 'settings',
+              icon: <SettingOutlined />,
+              label: '系统设置',
+              onClick: () => handleMenuClick('/settings'),
+            }
           ]}
         />
       </Sider>
@@ -147,4 +158,4 @@ const AppLayout: React.FC = () => {
   );
 };
 
-export default AppLayout; 
+export default AppLayout;

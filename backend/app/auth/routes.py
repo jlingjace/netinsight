@@ -82,4 +82,27 @@ def get_user_info():
     if not user:
         return jsonify({'message': '用户不存在'}), 404
     
-    return jsonify(user.to_dict()), 200 
+    return jsonify(user.to_dict()), 200
+
+@auth_bp.route('/change-password', methods=['POST'])
+@jwt_required()
+def change_password():
+    current_user_id = get_jwt_identity()
+    user = User.query.get(current_user_id)
+    
+    if not user:
+        return jsonify({'message': '用户不存在'}), 404
+    
+    data = request.get_json()
+    if not data or not data.get('oldPassword') or not data.get('newPassword'):
+        return jsonify({'message': '请提供旧密码和新密码'}), 400
+    
+    # 验证旧密码
+    if not user.check_password(data['oldPassword']):
+        return jsonify({'message': '当前密码错误'}), 401
+    
+    # 更新密码
+    user.set_password(data['newPassword'])
+    db.session.commit()
+    
+    return jsonify({'message': '密码修改成功'}), 200

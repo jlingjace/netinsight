@@ -143,7 +143,18 @@ export const authService = {
   // 检查是否已认证
   isAuthenticated: () => {
     return !!localStorage.getItem('accessToken');
+  },
+
+  // 修改密码
+  changePassword: async (passwordData: { oldPassword: string; newPassword: string }) => {
+    try {
+      const response = await api.post('/auth/change-password', passwordData);
+      return response.data;
+    } catch (error) {
+      console.error('修改密码失败:', error);
+      throw error;
+    }
   }
 };
 
-export default api; 
+export default api;

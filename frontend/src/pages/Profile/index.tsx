@@ -75,17 +75,15 @@ const Profile: React.FC = () => {
   const handleChangePassword = async (values: { oldPassword: string; newPassword: string; confirmPassword: string }) => {
     try {
       setUpdating(true);
-      // TODO: 实现修改密码的API调用
-      console.log('修改密码:', values);
-      
-      // 模拟API响应
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
+      await authService.changePassword({
+        oldPassword: values.oldPassword,
+        newPassword: values.newPassword
+      });
       message.success('密码修改成功');
       form.resetFields(['oldPassword', 'newPassword', 'confirmPassword']);
-    } catch (err) {
+    } catch (err: any) {
       console.error('修改密码失败:', err);
-      message.error('修改密码失败，请稍后重试');
+      message.error(err.response?.data?.message || '修改密码失败，请稍后重试');
     } finally {
       setUpdating(false);
     }
@@ -273,35 +271,11 @@ const Profile: React.FC = () => {
               </Card>
             ),
           },
-          {
-            key: 'settings',
-            label: (
-              <span>
-                <SettingOutlined />
-                设置
-              </span>
-            ),
-            children: (
-              <Card className="tab-card">
-                <Title level={4}>通知设置</Title>
-                <Paragraph>通知设置功能即将推出，敬请期待。</Paragraph>
-                
-                <Divider />
-                
-                <Title level={4}>显示设置</Title>
-                <Paragraph>显示设置功能即将推出，敬请期待。</Paragraph>
-                
-                <Divider />
-                
-                <Title level={4}>账户安全</Title>
-                <Paragraph>上次登录时间: {user?.last_login || '未知'}</Paragraph>
-              </Card>
-            ),
-          },
+
         ]}
       />
     </div>
   );
 };
 
-export default Profile; 
+export default Profile;

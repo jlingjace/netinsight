@@ -4,6 +4,7 @@ import Login from './pages/Login';
 import Register from './pages/Register';
 import Dashboard from './pages/Dashboard';
 import Profile from './pages/Profile';
+import Settings from './pages/Settings';
 import AppLayout from './components/Layout/AppLayout';
 import { authService } from './services/api';
 
@@ -43,7 +44,7 @@ const App: React.FC = () => {
           {/* 以下是占位路由，稍后实现 */}
           <Route path="upload" element={<div>文件上传功能正在开发中...</div>} />
           <Route path="reports" element={<div>分析报告功能正在开发中...</div>} />
-          <Route path="settings" element={<div>设置功能正在开发中...</div>} />
+          <Route path="settings" element={<Settings />} />
           <Route path="notifications" element={<div>通知功能正在开发中...</div>} />
         </Route>
         
