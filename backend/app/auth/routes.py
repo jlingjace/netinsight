@@ -1,58 +1,21 @@
 from flask import request, jsonify
 from flask_jwt_extended import (
     create_access_token, create_refresh_token, 
-    jwt_required, get_jwt_identity
+    jwt_required as flask_jwt_required, get_jwt_identity
 )
 from app import db
 from app.models.user import User, Role, Permission
 from app.auth import auth_bp
+from app.auth.utils import admin_required, permission_required, jwt_required
 import secrets
 import string
+import jwt
+from flask import current_app
 
 # 生成随机密码的函数
 def generate_random_password(length=12):
     alphabet = string.ascii_letters + string.digits
     return ''.join(secrets.choice(alphabet) for _ in range(length))
-
-# 验证管理员权限
-def admin_required(fn):
-    @jwt_required()
-    def wrapper(*args, **kwargs):
-        current_user_id = get_jwt_identity()
-        user = User.query.get(current_user_id)
-        
-        if not user or user.role != 'admin':
-            return jsonify({'message': '需要管理员权限'}), 403
-        
-        return fn(*args, **kwargs)
-    
-    wrapper.__name__ = fn.__name__
-    return wrapper
-
-# 权限验证装饰器
-def permission_required(permission_code):
-    def decorator(fn):
-        @jwt_required()
-        def wrapper(*args, **kwargs):
-            current_user_id = get_jwt_identity()
-            user = User.query.get(current_user_id)
-            
-            if not user:
-                return jsonify({'message': '未认证用户'}), 401
-                
-            # 管理员拥有所有权限
-            if user.role == 'admin':
-                return fn(*args, **kwargs)
-                
-            # 检查用户角色是否有指定权限
-            if user.has_permission(permission_code):
-                return fn(*args, **kwargs)
-            
-            return jsonify({'message': '没有权限执行此操作'}), 403
-        
-        wrapper.__name__ = fn.__name__
-        return wrapper
-    return decorator
 
 @auth_bp.route('/register', methods=['POST'])
 def register():
@@ -104,9 +67,12 @@ def login():
     # 更新最后登录时间
     user.update_last_login()
     
-    # 创建访问令牌和刷新令牌
-    access_token = create_access_token(identity=user.id)
-    refresh_token = create_refresh_token(identity=user.id)
+    # 创建访问令牌和刷新令牌 - 确保用户ID是字符串类型
+    access_token = create_access_token(identity=str(user.id))
+    refresh_token = create_refresh_token(identity=str(user.id))
+    
+    print(f"==DEBUG== 生成的访问令牌: {access_token[:20]}...")
+    print(f"==DEBUG== 生成的刷新令牌: {refresh_token[:20]}...")
     
     # 获取用户权限
     user_data = user.to_dict(include_role_permissions=True)
@@ -131,20 +97,29 @@ def login():
     }), 200
 
 @auth_bp.route('/refresh', methods=['POST'])
-@jwt_required(refresh=True)
+@flask_jwt_required(refresh=True)
 def refresh():
-    current_user_id = get_jwt_identity()
-    new_access_token = create_access_token(identity=current_user_id)
+    # 使用get_jwt_identity获取用户ID
+    user_id = get_jwt_identity()
+    print(f"==DEBUG== 刷新令牌，用户ID: {user_id}")
+    
+    # 确保user_id是字符串类型
+    if not isinstance(user_id, str):
+        user_id = str(user_id)
+    
+    # 创建新的访问令牌
+    new_access_token = create_access_token(identity=user_id)
     
     return jsonify({
         'access_token': new_access_token
     }), 200
 
 @auth_bp.route('/me', methods=['GET'])
-@jwt_required()
+@jwt_required
 def get_user_info():
-    current_user_id = get_jwt_identity()
-    user = User.query.get(current_user_id)
+    # 从请求对象中获取用户ID，这是由jwt_required装饰器设置的
+    user_id = request.user_id
+    user = User.query.get(user_id)
     
     if not user:
         return jsonify({'message': '用户不存在'}), 404
@@ -168,10 +143,11 @@ def get_user_info():
     return jsonify(user_data), 200
 
 @auth_bp.route('/change-password', methods=['POST'])
-@jwt_required()
+@jwt_required
 def change_password():
-    current_user_id = get_jwt_identity()
-    user = User.query.get(current_user_id)
+    # 从请求对象中获取用户ID
+    user_id = request.user_id
+    user = User.query.get(user_id)
     
     if not user:
         return jsonify({'message': '用户不存在'}), 404

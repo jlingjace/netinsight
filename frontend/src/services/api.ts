@@ -3,11 +3,13 @@ import axios from 'axios';
 // 创建axios实例
 const api = axios.create({
   baseURL: process.env.REACT_APP_API_URL || 'http://localhost:5000/api',
-  timeout: 10000,
+  timeout: 15000,
   headers: {
     'Content-Type': 'application/json',
     'Accept': 'application/json',
-  }
+  },
+  withCredentials: false, // 修改为false以避免跨域问题
+  maxRedirects: 0 // 禁用重定向，避免308问题
 });
 
 // 请求拦截器，添加token和日志
@@ -18,8 +20,20 @@ api.interceptors.request.use(
       config.headers.Authorization = `Bearer ${token}`;
     }
     
-    // 调试日志
-    console.log(`请求: ${config.method?.toUpperCase()} ${config.url}`, config.data || {});
+    // 增强调试日志
+    console.log(`请求: ${config.method?.toUpperCase()} ${config.url}`);
+    
+    // 对FormData类型的请求体进行详细记录
+    if (config.data instanceof FormData) {
+      console.log('FormData内容:');
+      // 由于FormData遍历存在兼容性问题，简化为仅提示包含FormData
+      console.log('- 包含文件和表单数据');
+    } else if (config.data) {
+      console.log('请求数据:', config.data);
+    }
+    
+    // 记录请求头
+    console.log('请求头:', config.headers);
     
     return config;
   },

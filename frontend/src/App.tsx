@@ -5,12 +5,17 @@ import Register from './pages/Register';
 import Dashboard from './pages/Dashboard';
 import Profile from './pages/Profile';
 import Settings from './pages/Settings';
+import FileUploadPage from './pages/FileUpload';
 import AppLayout from './components/Layout/AppLayout';
 import PermissionRoute from './components/PermissionRoute';
+import TestUpload from './components/TestUpload';
 
-// 文件上传和报告组件（占位）
-const FileUpload = () => <div>文件上传功能正在开发中...</div>;
-const Reports = () => <div>分析报告功能正在开发中...</div>;
+// 导入报告相关组件
+import ReportList from './pages/Reports';
+import ReportDetail from './pages/Reports/ReportDetail';
+import GenerateReport from './pages/Reports/ReportGenerate';
+
+// 通知组件（占位）
 const Notifications = () => <div>通知功能正在开发中...</div>;
 
 const App: React.FC = () => {
@@ -20,6 +25,7 @@ const App: React.FC = () => {
         {/* 公共路由 */}
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
+        <Route path="/test-upload" element={<TestUpload />} />
         
         {/* 应用布局 */}
         <Route path="/" element={<AppLayout />}>
@@ -48,14 +54,29 @@ const App: React.FC = () => {
           <Route path="upload" element={
             <PermissionRoute 
               requiredRole="analyst"
-              element={<FileUpload />}
+              element={<FileUploadPage />}
             />
           } />
           
+          {/* 报告相关路由 */}
           <Route path="reports" element={
             <PermissionRoute 
               requiredRole="analyst"
-              element={<Reports />}
+              element={<ReportList />}
+            />
+          } />
+          
+          <Route path="reports/generate" element={
+            <PermissionRoute 
+              requiredRole="analyst"
+              element={<GenerateReport />}
+            />
+          } />
+          
+          <Route path="reports/:reportId" element={
+            <PermissionRoute 
+              requiredRole="analyst"
+              element={<ReportDetail />}
             />
           } />
           
