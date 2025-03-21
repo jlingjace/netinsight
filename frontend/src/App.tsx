@@ -1,51 +1,71 @@
-import React, { useEffect, useState } from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom';
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import Dashboard from './pages/Dashboard';
 import Profile from './pages/Profile';
 import Settings from './pages/Settings';
 import AppLayout from './components/Layout/AppLayout';
-import { authService } from './services/api';
+import PermissionRoute from './components/PermissionRoute';
 
-// 受保护的路由，需要登录才能访问
-const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const location = useLocation();
-  const isAuthenticated = authService.isAuthenticated();
-
-  if (!isAuthenticated) {
-    // 记录用户尝试访问的URL，登录后可以重定向回来
-    return <Navigate to="/login" state={{ from: location }} replace />;
-  }
-
-  return <>{children}</>;
-};
+// 文件上传和报告组件（占位）
+const FileUpload = () => <div>文件上传功能正在开发中...</div>;
+const Reports = () => <div>分析报告功能正在开发中...</div>;
+const Notifications = () => <div>通知功能正在开发中...</div>;
 
 const App: React.FC = () => {
   return (
     <Router>
       <Routes>
-        {/* 认证页面 */}
+        {/* 公共路由 */}
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         
-        {/* 应用布局和受保护的路由 */}
-        <Route 
-          path="/" 
-          element={
-            <ProtectedRoute>
-              <AppLayout />
-            </ProtectedRoute>
-          }
-        >
+        {/* 应用布局 */}
+        <Route path="/" element={<AppLayout />}>
           <Route index element={<Navigate to="/dashboard" replace />} />
-          <Route path="dashboard" element={<Dashboard />} />
-          <Route path="profile" element={<Profile />} />
-          {/* 以下是占位路由，稍后实现 */}
-          <Route path="upload" element={<div>文件上传功能正在开发中...</div>} />
-          <Route path="reports" element={<div>分析报告功能正在开发中...</div>} />
-          <Route path="settings" element={<Settings />} />
-          <Route path="notifications" element={<div>通知功能正在开发中...</div>} />
+          
+          {/* 所有用户都可访问的路由 */}
+          <Route path="dashboard" element={
+            <PermissionRoute 
+              element={<Dashboard />} 
+            />
+          } />
+          
+          <Route path="profile" element={
+            <PermissionRoute 
+              element={<Profile />}
+            />
+          } />
+          
+          <Route path="notifications" element={
+            <PermissionRoute 
+              element={<Notifications />}
+            />
+          } />
+          
+          {/* 需要分析师或管理员权限的路由 */}
+          <Route path="upload" element={
+            <PermissionRoute 
+              requiredRole="analyst"
+              element={<FileUpload />}
+            />
+          } />
+          
+          <Route path="reports" element={
+            <PermissionRoute 
+              requiredRole="analyst"
+              element={<Reports />}
+            />
+          } />
+          
+          {/* 系统设置路由，需要管理员权限 */}
+          <Route path="settings" element={
+            <PermissionRoute 
+              requiredRole="admin"
+              element={<Settings />}
+            />
+          } />
         </Route>
         
         {/* 未匹配的路由 */}

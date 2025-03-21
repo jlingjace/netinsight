@@ -1,0 +1,60 @@
+.user-management {
+  width: 100%;
+}
+
+.user-management-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.user-management-header h4 {
+  margin: 0;
+}
+
+/* 表格样式 */
+.user-management .ant-table-wrapper {
+  margin-bottom: 24px;
+}
+
+/* 标签样式 */
+.user-management .ant-tag {
+  min-width: 60px;
+  text-align: center;
+}
+
+/* 按钮间距 */
+.user-management .ant-btn {
+  margin-right: 8px;
+}
+
+/* 卡片样式 */
+.user-management .ant-card {
+  background-color: #f5f5f5;
+  border: 1px dashed #d9d9d9;
+  text-align: center;
+  padding: 8px;
+  margin: 16px 0;
+}
+
+.user-management .ant-card .ant-typography {
+  font-size: 16px;
+  font-family: 'Courier New', monospace;
+  letter-spacing: 1px;
+}
+
+/* 表单项样式 */
+.user-management .ant-form-item {
+  margin-bottom: 16px;
+}
+
+/* 模态框底部按钮对齐 */
+.user-management .ant-modal-footer {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.user-management .ant-modal-footer button {
+  margin-left: 8px;
+} 

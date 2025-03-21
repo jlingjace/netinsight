@@ -90,6 +90,41 @@ api.interceptors.response.use(
   }
 );
 
+// 用户数据接口定义
+export interface User {
+  id: string;
+  email: string;
+  name?: string;
+  role: string;
+  created_at?: string;
+  last_login?: string;
+  is_active: boolean;
+  temp_password?: string;
+  custom_role?: Role;
+  permissions?: string[];
+}
+
+// 权限接口定义
+export interface Permission {
+  id: number;
+  name: string;
+  code: string;
+  description?: string;
+  category?: string;
+  created_at?: string;
+}
+
+// 角色接口定义
+export interface Role {
+  id: number;
+  name: string;
+  description?: string;
+  is_system: boolean;
+  created_at?: string;
+  updated_at?: string;
+  permissions?: Permission[];
+}
+
 // 身份验证服务
 export const authService = {
   // 用户注册
@@ -152,6 +187,155 @@ export const authService = {
       return response.data;
     } catch (error) {
       console.error('修改密码失败:', error);
+      throw error;
+    }
+  }
+};
+
+// 用户管理服务
+export const userManagementService = {
+  // 获取所有用户
+  getAllUsers: async (): Promise<User[]> => {
+    try {
+      const response = await api.get('/auth/users');
+      return response.data;
+    } catch (error) {
+      console.error('获取用户列表失败:', error);
+      throw error;
+    }
+  },
+  
+  // 创建新用户
+  createUser: async (userData: { 
+    email: string;
+    password?: string;
+    name?: string;
+    role?: string;
+    role_id?: number;
+  }): Promise<User> => {
+    try {
+      const response = await api.post('/auth/users', userData);
+      return response.data;
+    } catch (error) {
+      console.error('创建用户失败:', error);
+      throw error;
+    }
+  },
+  
+  // 更新用户信息
+  updateUser: async (userId: string, userData: {
+    role?: string;
+    name?: string;
+    is_active?: boolean;
+    role_id?: number;
+  }): Promise<User> => {
+    try {
+      const response = await api.put(`/auth/users/${userId}`, userData);
+      return response.data;
+    } catch (error) {
+      console.error('更新用户信息失败:', error);
+      throw error;
+    }
+  },
+  
+  // 重置用户密码
+  resetUserPassword: async (userId: string): Promise<{ message: string; temp_password: string }> => {
+    try {
+      const response = await api.post(`/auth/users/${userId}/reset-password`);
+      return response.data;
+    } catch (error) {
+      console.error('重置密码失败:', error);
+      throw error;
+    }
+  }
+};
+
+// 权限管理服务
+export const permissionService = {
+  // 获取所有权限
+  getAllPermissions: async (): Promise<Permission[]> => {
+    try {
+      const response = await api.get('/auth/permissions');
+      return response.data;
+    } catch (error) {
+      console.error('获取权限列表失败:', error);
+      throw error;
+    }
+  },
+  
+  // 获取权限分类
+  getPermissionCategories: async (): Promise<string[]> => {
+    try {
+      const response = await api.get('/auth/permissions/categories');
+      return response.data;
+    } catch (error) {
+      console.error('获取权限分类失败:', error);
+      throw error;
+    }
+  }
+};
+
+// 角色管理服务
+export const roleService = {
+  // 获取所有角色
+  getAllRoles: async (): Promise<Role[]> => {
+    try {
+      const response = await api.get('/auth/roles');
+      return response.data;
+    } catch (error) {
+      console.error('获取角色列表失败:', error);
+      throw error;
+    }
+  },
+  
+  // 获取单个角色详情
+  getRole: async (roleId: number): Promise<Role> => {
+    try {
+      const response = await api.get(`/auth/roles/${roleId}`);
+      return response.data;
+    } catch (error) {
+      console.error('获取角色详情失败:', error);
+      throw error;
+    }
+  },
+  
+  // 创建角色
+  createRole: async (roleData: {
+    name: string;
+    description?: string;
+    permission_ids?: number[];
+  }): Promise<Role> => {
+    try {
+      const response = await api.post('/auth/roles', roleData);
+      return response.data;
+    } catch (error) {
+      console.error('创建角色失败:', error);
+      throw error;
+    }
+  },
+  
+  // 更新角色
+  updateRole: async (roleId: number, roleData: {
+    name?: string;
+    description?: string;
+    permission_ids?: number[];
+  }): Promise<Role> => {
+    try {
+      const response = await api.put(`/auth/roles/${roleId}`, roleData);
+      return response.data;
+    } catch (error) {
+      console.error('更新角色失败:', error);
+      throw error;
+    }
+  },
+  
+  // 删除角色
+  deleteRole: async (roleId: number): Promise<{ message: string }> => {
+    try {
+      const response = await api.delete(`/auth/roles/${roleId}`);
+      return response.data;
+    } catch (error) {
+      console.error('删除角色失败:', error);
       throw error;
     }
   }
