@@ -1,0 +1,92 @@
+.generate-report-container {
+  padding: 24px;
+}
+
+.generate-form-card {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.form-subtitle {
+  display: block;
+  margin-top: 8px;
+  margin-bottom: 16px;
+}
+
+.analysis-options-card {
+  background-color: #f9f9f9;
+  border: 1px solid #f0f0f0;
+}
+
+.analysis-options-card .ant-card-body {
+  padding: 16px;
+}
+
+.analysis-options-card .ant-form-item {
+  margin-bottom: 12px;
+}
+
+.analysis-options-card .ant-form-item:last-child {
+  margin-bottom: 0;
+}
+
+.file-option {
+  display: flex;
+  align-items: center;
+}
+
+.file-icon {
+  margin-right: 12px;
+  font-size: 24px;
+  color: #1890ff;
+}
+
+.file-info {
+  flex: 1;
+}
+
+.file-name {
+  font-weight: 500;
+}
+
+.file-meta {
+  font-size: 12px;
+  color: rgba(0, 0, 0, 0.45);
+  margin-top: 4px;
+}
+
+.form-actions {
+  margin-top: 24px;
+}
+
+.form-loading-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(255, 255, 255, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 10;
+  border-radius: 2px;
+}
+
+/* 响应式调整 */
+@media (max-width: 768px) {
+  .generate-report-container {
+    padding: 16px;
+  }
+  
+  .ant-radio-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  
+  .ant-radio-button-wrapper {
+    width: 100%;
+    text-align: center;
+  }
+} 
