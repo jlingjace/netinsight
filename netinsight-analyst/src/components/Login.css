@@ -1,0 +1,185 @@
+.login-container {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.login-background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000"><defs><radialGradient id="a" cx="50%" cy="50%"><stop offset="0%" stop-color="%23ffffff" stop-opacity="0.1"/><stop offset="100%" stop-color="%23ffffff" stop-opacity="0"/></radialGradient></defs><rect width="100%" height="100%" fill="url(%23a)"/></svg>') center/cover;
+}
+
+.login-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.3);
+}
+
+.login-card {
+  width: 100%;
+  max-width: 400px;
+  margin: 0 20px;
+  border-radius: 16px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(10px);
+  background: rgba(255, 255, 255, 0.95);
+  position: relative;
+  z-index: 1;
+}
+
+.login-header {
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+.login-title {
+  color: #1890ff !important;
+  margin-bottom: 8px !important;
+  font-weight: 700;
+  background: linear-gradient(135deg, #1890ff, #722ed1);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.login-subtitle {
+  color: #666;
+  font-size: 14px;
+}
+
+.login-tabs {
+  margin-bottom: 24px;
+}
+
+.login-tabs .ant-tabs-tab {
+  font-weight: 500;
+}
+
+.login-form {
+  margin-top: 24px;
+}
+
+.login-form .ant-form-item {
+  margin-bottom: 20px;
+}
+
+.login-form .ant-input-affix-wrapper,
+.login-form .ant-input {
+  border-radius: 8px;
+  border: 1px solid #d9d9d9;
+  transition: all 0.3s;
+}
+
+.login-form .ant-input-affix-wrapper:hover,
+.login-form .ant-input:hover {
+  border-color: #1890ff;
+  box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.1);
+}
+
+.login-form .ant-input-affix-wrapper:focus,
+.login-form .ant-input-affix-wrapper-focused,
+.login-form .ant-input:focus {
+  border-color: #1890ff;
+  box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.2);
+}
+
+.login-button {
+  height: 44px;
+  border-radius: 8px;
+  font-weight: 500;
+  background: linear-gradient(135deg, #1890ff, #722ed1);
+  border: none;
+  transition: all 0.3s;
+}
+
+.login-button:hover {
+  background: linear-gradient(135deg, #40a9ff, #9254de);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(24, 144, 255, 0.3);
+}
+
+.login-demo-account {
+  text-align: center;
+  margin-top: 16px;
+  padding: 12px;
+  background: #f6f8fa;
+  border-radius: 8px;
+  border: 1px solid #e1e4e8;
+}
+
+.login-footer {
+  text-align: center;
+  margin-top: 32px;
+  padding-top: 20px;
+  border-top: 1px solid #f0f0f0;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+  .login-card {
+    margin: 0 16px;
+    max-width: none;
+  }
+  
+  .login-title {
+    font-size: 24px !important;
+  }
+  
+  .login-subtitle {
+    font-size: 13px;
+  }
+}
+
+/* 暗色主题适配 */
+[data-theme='dark'] .login-card {
+  background: rgba(20, 20, 20, 0.95);
+  border: 1px solid #303030;
+}
+
+[data-theme='dark'] .login-subtitle {
+  color: #999;
+}
+
+[data-theme='dark'] .login-demo-account {
+  background: #1f1f1f;
+  border-color: #303030;
+}
+
+[data-theme='dark'] .login-footer {
+  border-top-color: #303030;
+}
+
+/* 动画效果 */
+.login-card {
+  animation: fadeInUp 0.6s ease-out;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* 加载状态 */
+.login-button.ant-btn-loading {
+  background: linear-gradient(135deg, #1890ff, #722ed1);
+}
+
+.login-button.ant-btn-loading:hover {
+  background: linear-gradient(135deg, #1890ff, #722ed1);
+} 

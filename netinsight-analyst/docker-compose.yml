@@ -1,0 +1,60 @@
+version: '3.8'
+
+services:
+  # MongoDB数据库
+  mongodb:
+    image: mongo:6.0
+    container_name: netinsight-mongodb
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_DATABASE: netinsight
+    volumes:
+      - mongodb_data:/data/db
+    networks:
+      - netinsight-network
+
+  # NetInsight API服务
+  api:
+    build: .
+    container_name: netinsight-api
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      NODE_ENV: production
+      PORT: 3000
+      MONGODB_URI: mongodb://mongodb:27017/netinsight
+      JWT_SECRET: ${JWT_SECRET:-your_jwt_secret_here}
+      MAX_FILE_SIZE: 10737418240
+      LOG_LEVEL: info
+    volumes:
+      - ./uploads:/app/uploads
+      - ./logs:/app/logs
+    depends_on:
+      - mongodb
+    networks:
+      - netinsight-network
+
+  # Redis缓存（可选，用于生产环境）
+  redis:
+    image: redis:7-alpine
+    container_name: netinsight-redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - netinsight-network
+    profiles:
+      - production
+
+volumes:
+  mongodb_data:
+  redis_data:
+
+networks:
+  netinsight-network:
+    driver: bridge 

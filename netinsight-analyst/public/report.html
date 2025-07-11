@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NetInsight - 分析报告</title>
+    <link rel="stylesheet" href="/css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="app">
+        <header class="header">
+            <div class="container">
+                <div class="header-content">
+                    <div class="logo">
+                        <i class="fas fa-network-wired"></i>
+                        <span>NetInsight</span>
+                    </div>
+                    <nav class="nav">
+                        <a href="/" class="nav-link">
+                            <i class="fas fa-history"></i>
+                            返回历史记录
+                        </a>
+                    </nav>
+                </div>
+            </div>
+        </header>
+        <main class="main">
+            <div class="container">
+                <div id="reportLoading" style="text-align:center; padding:48px;">
+                    <i class="fas fa-spinner fa-spin"></i> 正在加载详细报告...
+                </div>
+                <div id="reportContent" style="display:none;"></div>
+            </div>
+        </main>
+    </div>
+    <script src="/js/report.js"></script>
+</body>
+</html> 
